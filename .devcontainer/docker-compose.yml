@@ -1,0 +1,30 @@
+version: "3"
+
+volumes:
+  bin-store:
+  build-store:
+  target-store:
+  node-modules-store:
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+
+    ports:
+      - "8080:8080"
+
+    volumes:
+      - ..:/workspace:delegated
+      - bin-store:/workspace/app/bin
+      - build-store:/workspace/app/build
+      - target-store:/workspace/app/target
+      - node-modules-store:/workspace/cdk/node_modules
+      - $HOME$USERPROFILE/.ssh:/home/dev/.ssh
+      - $HOME$USERPROFILE/.aws:/home/dev/.aws
+
+    tty: true
